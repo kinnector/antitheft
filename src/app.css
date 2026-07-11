@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+/* 
+ * Kinnector Design System Specification
+ * Implementing weather-governed visual state machine tokens
+ */
+
+:root {
+  /* Default Weather State (Clear / System Healthy) */
+  --weather-state: 'clear';
+  --sky-top: #090d16;
+  --sky-bottom: #02040a;
+  
+  --fog-opacity: 0.35;
+  --fog-rise: 25%;
+  --cloud-speed: 30s;
+  --cloud-opacity: 0.2;
+  
+  --alert-light-color: transparent;
+  --alert-light-opacity: 0;
+  
+  --light-source-x: 20%;
+  --light-source-y: 10%;
+  
+  --glass-bg: rgba(12, 18, 30, 0.64);
+  --glass-blur: blur(24px) saturate(170%);
+  --glass-border-alpha: 0.15;
+  --glass-moisture: 0;
+  
+  --status-pulse-speed: 4s;
+  --status-pulse-color: #10b981;
+  --canvas-rain-active: 0;
+  --canvas-frost-active: 0;
+  --screen-shake-active: 0;
+  
+  --frost-progress: 0;
+  
+  /* Shared Tokens */
+  --color-accent: #10b981;
+  --color-accent-dim: rgba(16, 185, 129, 0.25);
+  --color-alert-amber: #b45309;
+  --color-danger-soft: rgba(239, 68, 68, 0.18);
+  --color-frost-crystal: #dbeafe;
+  --color-frost-ice: rgba(200, 225, 255, 0.82);
+  
+  /* Fonts */
+  --font-ui: "Inter", system-ui, -apple-system, sans-serif;
+  --font-data: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
+}
+
+/* Base resets & layout shake hook */
+body {
+  font-family: var(--font-ui);
+  background: var(--sky-bottom);
+  overflow-x: hidden;
+  margin: 0;
+  user-select: none;
+}
+
+.shake-wrapper {
+  transition: transform 0.15s ease-out;
+}
+
+.shake-active {
+  animation: screen-shake 0.4s ease-in-out;
+}
+
+/* Atmospheric Sky Background */
+.sky-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  transition: background 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+/* Volumetric Fog Layer */
+.fog-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--fog-rise);
+  background: linear-gradient(0deg, rgba(15, 23, 42, 0.6) 0%, transparent 100%);
+  opacity: var(--fog-opacity);
+  filter: blur(40px);
+  pointer-events: none;
+  transition: height 2.2s ease, opacity 2.2s ease;
+}
+
+/* Cloud blobs floating lazily */
+.cloud-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+  opacity: var(--cloud-opacity);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transition: opacity 2.2s ease;
+}
+
+.cloud-1 {
+  width: 600px;
+  height: 600px;
+  top: -10%;
+  left: -10%;
+  animation: cloud-drift-slow var(--cloud-speed) linear infinite;
+}
+
+.cloud-2 {
+  width: 800px;
+  height: 800px;
+  bottom: -20%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+  animation: cloud-drift-fast calc(var(--cloud-speed) * 0.7) linear infinite;
+}
+
+/* Star field for night mode */
+.star-field {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 150px 70px, rgba(255,255,255,0.9), rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 300px 220px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 450px 120px, rgba(255,255,255,0.85), rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 700px 380px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 850px 290px, rgba(255,255,255,0.9), rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 1000px 480px, #ffffff, rgba(0,0,0,0));
+  background-size: 1100px 600px;
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 2s ease;
+}
+
+/* Glass Card Material */
+.glass-card {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, var(--glass-border-alpha));
+  transition: 
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.35),
+    0 12px 40px rgba(0, 0, 0, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+/* Micro-Grain Noise overlay */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  border-radius: 11px;
+}
+
+/* Glass Condensation moisture */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255, 0.18) 0%, rgba(255,255,255, 0.04) 60%, transparent 100%);
+  opacity: calc(var(--glass-moisture) * 0.9);
+  filter: blur(4px);
+  border-radius: 11px;
+  transition: opacity 1.5s ease;
+}
+
+/* Hover shine highlight */
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, calc(var(--glass-border-alpha) + 0.12));
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.45),
+    0 16px 48px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+/* Frozen quarantined overlay */
+.quarantined-frozen {
+  position: relative;
+}
+
+.quarantined-frozen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: rgba(219, 234, 254, calc(var(--frost-progress) * 0.22));
+  backdrop-filter: blur(calc(var(--frost-progress) * 8px));
+  border-radius: 11px;
+  transition: backdrop-filter 2s ease, background 2s ease;
+}
+
+/* Organic Breathing Status dot */
+.status-dot-calm {
+  background: var(--status-pulse-color);
+  box-shadow: 0 0 10px var(--status-pulse-color);
+  animation: calm-breath var(--status-pulse-speed) ease-in-out infinite;
+}
+
+.status-dot-urgent {
+  background: #f43f5e;
+  box-shadow: 0 0 12px #f43f5e;
+  animation: urgent-double-pulse 0.8s ease-in-out infinite;
+}
+
+/* Lightning flash backdrop */
+.lightning-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: rgba(200, 220, 255, 0.18);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lightning-active {
+  animation: flash-animation 0.4s ease-out;
+}
+
+/* Surface sweep clean wipe */
+.surface-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.surface-sweep::after {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 100%;
+  top: -50%;
+  left: -50%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15) 50%, transparent);
+  transform: translate(-100%, -100%) rotate(-30deg);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sweep-active::after {
+  transform: translate(100%, 100%) rotate(-30deg);
+}
+
+/* Keyframes animations */
+@keyframes cloud-drift-slow {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 20px) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes cloud-drift-fast {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-30px, 15px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes calm-breath {
+  0%, 100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 4px var(--status-pulse-color); }
+  50% { transform: scale(1.18); opacity: 1; box-shadow: 0 0 14px var(--status-pulse-color); }
+}
+
+@keyframes urgent-double-pulse {
+  0% { transform: scale(1); opacity: 1; box-shadow: 0 0 14px #f43f5e; }
+  15% { transform: scale(1.22); opacity: 1; box-shadow: 0 0 24px #f43f5e; }
+  30% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 8px #f43f5e; }
+  45% { transform: scale(1.18); opacity: 1; box-shadow: 0 0 20px #f43f5e; }
+  60%, 100% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 6px #f43f5e; }
+}
+
+@keyframes flash-animation {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  12% { opacity: 0.3; }
+  16% { opacity: 0.8; }
+  20%, 100% { opacity: 0; }
+}
+
+@keyframes screen-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
