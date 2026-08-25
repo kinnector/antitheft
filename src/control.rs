@@ -216,9 +216,10 @@ impl ControlServer {
                                 {
                                     use std::os::unix::fs::MetadataExt;
                                     let inode = metadata.ino();
+                                    let dev = metadata.dev();
                                     println!("[Agent Control] Dynamically registering sensitive file: {} (Inode: {}, Category Flags: {:#x})", path_str, inode, category_flags);
                                     unsafe {
-                                        crate::ffi::add_sensitive_inode(inode, category_flags);
+                                        crate::ffi::add_sensitive_inode(dev, inode, category_flags);
                                     }
                                 }
                             }
@@ -232,9 +233,10 @@ impl ControlServer {
                                 {
                                     use std::os::unix::fs::MetadataExt;
                                     let inode = metadata.ino();
+                                    let dev = metadata.dev();
                                     println!("[Agent Control] Dynamically registering protected directory: {} (Inode: {})", path_str, inode);
                                     unsafe {
-                                        crate::ffi::add_sensitive_inode(inode, 0x08); // CAT_APP_DATA
+                                        crate::ffi::add_sensitive_inode(dev, inode, 0x08); // CAT_APP_DATA
                                     }
                                 }
                             }

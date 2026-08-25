@@ -157,9 +157,10 @@ pub async fn run_agent() -> Result<(), Box<dyn std::error::Error>> {
                                 #[cfg(unix)]
                                 {
                                     let inode = metadata.ino();
+                                    let dev = metadata.dev();
                                     println!("[Agent Reloader] Dynamically registering sensitive file: {} (Inode: {}, Category Flags: {:#x})", path_str, inode, category_flags);
                                     unsafe {
-                                        ffi::add_sensitive_inode(inode, category_flags);
+                                        ffi::add_sensitive_inode(dev, inode, category_flags);
                                     }
                                 }
                                 #[cfg(windows)]
@@ -209,6 +210,16 @@ pub async fn run_agent() -> Result<(), Box<dyn std::error::Error>> {
         return Err("Telemetry FFI start failed".into());
     }
 
+    // LINUX_COVERAGE_PLAN.md "Critical constraint": kinnector.bpf.c is shared
+    // production code between wardend and antitheft-agent. Declaring MODE_ANTITHEFT
+    // here is what makes the kernel side ever consult Phase 3's resource_owner_map
+    // (and, later, Phase 5's protected_owner_pids) for this deployment -- a Warden
+    // deployment never sets this value to MODE_ANTITHEFT, so those branches stay dead
+    // for it regardless of what's compiled in.
+    unsafe {
+        ffi::set_config_value(5, 2); // CONFIG_DEPLOYMENT_MODE = 5, MODE_ANTITHEFT = 2
+    }
+
     let is_lsm = unsafe { ffi::is_lsm_active() };
     if is_lsm {
         println!("[Agent] LSM Mode is ACTIVE. Operating with kernel-level security, stability, and maximum performance.");
@@ -229,9 +240,10 @@ pub async fn run_agent() -> Result<(), Box<dyn std::error::Error>> {
                 #[cfg(unix)]
                 {
                     let inode = metadata.ino();
+                    let dev = metadata.dev();
                     println!("[Agent] Registering sensitive file: {} (Inode: {}, Category Flags: {:#x})", path_str, inode, category_flags);
                     unsafe {
-                        ffi::add_sensitive_inode(inode, category_flags);
+                        ffi::add_sensitive_inode(dev, inode, category_flags);
                     }
                 }
                 #[cfg(windows)]
@@ -247,14 +259,37 @@ pub async fn run_agent() -> Result<(), Box<dyn std::error::Error>> {
                 #[cfg(unix)]
                 {
                     let inode = metadata.ino();
+                    let dev = metadata.dev();
                     println!("[Agent] Registering protected directory: {} (Inode: {}, Category: CAT_APP_DATA)", path_str, inode);
                     unsafe {
-                        ffi::add_sensitive_inode(inode, 0x08);
+                        ffi::add_sensitive_inode(dev, inode, 0x08);
                     }
                 }
                 #[cfg(windows)]
                 {
                     println!("[Agent] Registering protected directory path: {}", path_str);
+                }
+            }
+        }
+    }
+
+    // Phase 4 (LINUX_COVERAGE_PLAN.md): register configured package-manager binaries
+    // in the kernel's install_binary_map, resolved via PATH search from
+    // package_manager_signatures() (protect-community/configs/warden/
+    // package_manager_signatures.json) -- replaces the hardcoded npm/yarn/pip/...
+    // string scan kinnector.bpf.c's bprm_creds_for_exec used to do, so adding a new
+    // ecosystem is a config change, not a kernel-object rebuild. Linux/BPF-only.
+    #[cfg(unix)]
+    {
+        const MAP_INSTALL_BINARY: i32 = 16;
+        for sig in config_manager.package_manager_signatures() {
+            if let Some(resolved) = resolve_in_path(&sig.executable) {
+                if let Ok(metadata) = std::fs::metadata(&resolved) {
+                    let inode = metadata.ino();
+                    println!("[Agent] Registering install binary: {} ({}) (Inode: {})", sig.executable, resolved.display(), inode);
+                    unsafe {
+                        ffi::update_map_entry(MAP_INSTALL_BINARY, 0, inode, 1);
+                    }
                 }
             }
         }
@@ -300,4 +335,19 @@ pub async fn run_agent() -> Result<(), Box<dyn std::error::Error>> {
     server.start().await?;
 
     Ok(())
+}
+
+// Phase 4 (LINUX_COVERAGE_PLAN.md): resolve a package-manager executable name
+// (e.g. "npm") to its on-disk path via $PATH search, so install_binary_map can be
+// populated by inode without hardcoding install locations.
+#[cfg(unix)]
+fn resolve_in_path(name: &str) -> Option<std::path::PathBuf> {
+    let path_var = std::env::var_os("PATH")?;
+    for dir in std::env::split_paths(&path_var) {
+        let candidate = dir.join(name);
+        if candidate.is_file() {
+            return Some(candidate);
+        }
+    }
+    None
 }
