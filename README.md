@@ -18,11 +18,22 @@ There's no separate Pro codebase. One agent, one CLI, one app, fully open source
 
 See [kinnector.dev/antitheft](https://kinnector.dev/antitheft) for the full product walkthrough, supported wallets/exchanges, and install instructions.
 
+## Layout
+
+- `agent/` - the Rust daemon that owns the enforcement decision and talks to `core`'s telemetry engine
+- `ui/` - the Tauri + SvelteKit desktop app that talks to the agent's control socket
+
 ## Build and run
 
 **Recommended IDE setup**: [VS Code](https://code.visualstudio.com/) + [Svelte extension](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri extension](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
 
 ```bash
+# agent
+cd agent
+cargo build --release
+
+# app
+cd ui
 npm install
 npm run tauri dev     # development mode
 npm run tauri build   # standalone production bundle for your platform
