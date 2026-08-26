@@ -345,11 +345,11 @@
   <header class="glass-card p-5 flex justify-between items-center relative overflow-hidden">
     <div class="flex items-center gap-3">
       <div class="h-10 w-10 rounded-lg bg-indigo-600/40 flex items-center justify-center font-bold text-white shadow-lg border border-indigo-400/30">
-        K
+        A
       </div>
       <div>
         <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-300 via-cyan-200 to-emerald-300 bg-clip-text text-transparent">
-          Kinnector Security Dashboard
+          Antitheft
         </h1>
         <p class="text-xs text-slate-400 font-mono uppercase tracking-wider">Atmosphere: {weatherState}</p>
       </div>
@@ -485,7 +485,7 @@
         <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800/50">
           <div>
             <h2 class="text-sm font-semibold text-slate-400 tracking-wider uppercase">Live Telemetry Alert Logs</h2>
-            <p class="text-xs text-slate-400">Real-time alerts and admin events from /var/log/kinnector/alerts.log</p>
+            <p class="text-xs text-slate-400">Real-time alerts and admin events from /var/log/antitheft/alerts.log</p>
           </div>
           <button 
             onclick={fetchLogs}

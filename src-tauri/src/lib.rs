@@ -4,7 +4,7 @@ use serde_json::json;
 
 #[tauri::command]
 fn get_agent_status() -> Result<serde_json::Value, String> {
-    let socket_path = "/var/run/kinnector/control.sock";
+    let socket_path = "/var/run/antitheft/control.sock";
     let mut stream = UnixStream::connect(socket_path).map_err(|e| format!("Failed to connect to control socket: {}", e))?;
     
     let req = json!({
@@ -25,7 +25,7 @@ fn get_agent_status() -> Result<serde_json::Value, String> {
 
 #[tauri::command]
 fn reload_agent_rules() -> Result<serde_json::Value, String> {
-    let socket_path = "/var/run/kinnector/control.sock";
+    let socket_path = "/var/run/antitheft/control.sock";
     let mut stream = UnixStream::connect(socket_path).map_err(|e| format!("Failed to connect: {}", e))?;
     
     let req = json!({
@@ -46,7 +46,7 @@ fn reload_agent_rules() -> Result<serde_json::Value, String> {
 
 #[tauri::command]
 fn release_containment(pid: u32) -> Result<serde_json::Value, String> {
-    let socket_path = "/var/run/kinnector/control.sock";
+    let socket_path = "/var/run/antitheft/control.sock";
     let mut stream = UnixStream::connect(socket_path).map_err(|e| format!("Failed to connect: {}", e))?;
     
     let req = json!({
@@ -67,7 +67,7 @@ fn release_containment(pid: u32) -> Result<serde_json::Value, String> {
 
 #[tauri::command]
 fn get_agent_logs() -> Result<String, String> {
-    let log_path = "/var/log/kinnector/alerts.log";
+    let log_path = "/var/log/antitheft/alerts.log";
     if !std::path::Path::new(log_path).exists() {
         return Ok("No EDR alert logs found.".to_string());
     }
@@ -90,7 +90,7 @@ pub fn run() {
             let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
                 loop {
-                    match tokio::net::UnixStream::connect("/var/run/kinnector/control.sock").await {
+                    match tokio::net::UnixStream::connect("/var/run/antitheft/control.sock").await {
                         Ok(mut stream) => {
                             let req = json!({
                                 "type": "Subscribe",
