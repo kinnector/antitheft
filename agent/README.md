@@ -1,6 +1,6 @@
-# Kinnector Agent
+# Antitheft Agent
 
-Kinnector Agent is the host-level security daemon written in Rust. It functions as the central decision engine, receiving raw telemetry from `kinnector-core`, evaluating behavioral heuristics, and executing local containment actions (such as process suspension, SIGKILL termination, or network blocking).
+Antitheft Agent is the host-level security daemon written in Rust. It functions as the central decision engine, receiving raw telemetry from `kinnector-core`, evaluating behavioral heuristics, and executing local containment actions (such as process suspension, SIGKILL termination, or network blocking).
 
 ---
 
@@ -8,7 +8,7 @@ Kinnector Agent is the host-level security daemon written in Rust. It functions 
 
 Operating system telemetry engines capture massive volumes of raw events but do not maintain process state context or evaluate policies. 
 
-Kinnector Agent solves this by running as a user-space daemon that tracks active process trees in memory, matches event sequences against security rules, and performs low-latency containment before malicious operations complete.
+Antitheft Agent solves this by running as a user-space daemon that tracks active process trees in memory, matches event sequences against security rules, and performs low-latency containment before malicious operations complete.
 
 ---
 
@@ -24,7 +24,7 @@ Kinnector Agent solves this by running as a user-space daemon that tracks active
                                 │
                                 ▼
                   ┌──────────────────────────┐
-                  │     kinnector-agent      │ ──[Hot-reloads /etc/kinnector/rules.db]
+                  │     antitheft-agent      │ ──[Hot-reloads /etc/kinnector/rules.db]
                   │    (Rust EDR Daemon)     │
                   └─────┬──────────────┬─────┘
                         │              │
@@ -92,7 +92,7 @@ The daemon coordinates three primary communication channels:
 
 ## Operating System Compatibility
 
-Kinnector Agent is optimized for modern Linux environments. It leverages kernel-level containment when supported, falling back to user-space hooks when necessary.
+Antitheft Agent is optimized for modern Linux environments. It leverages kernel-level containment when supported, falling back to user-space hooks when necessary.
 
 ### 1. BPF LSM Mode (Recommended)
 Provides kernel-level enforcement via Linux Security Modules:
@@ -126,5 +126,5 @@ cargo build --release
 Run the agent (requires root privileges to create socket files and execute containment actions):
 
 ```bash
-sudo ./target/release/kinnect-agent
+sudo ./target/release/antitheft-agent
 ```
