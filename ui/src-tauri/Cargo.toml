@@ -2,8 +2,10 @@
 name = "antitheft"
 version = "0.1.0"
 description = "Antitheft Desktop App"
-authors = ["you"]
+authors = ["Albert M. (Kinnector)"]
 edition = "2021"
+license-file = "../../LICENSE.md"
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

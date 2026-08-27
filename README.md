@@ -38,3 +38,23 @@ npm install
 npm run tauri dev     # development mode
 npm run tauri build   # standalone production bundle for your platform
 ```
+
+## License
+
+Antitheft is **source-available, not open source**. It is licensed under the
+[PolyForm Noncommercial License 1.0.0](./LICENSE.md).
+
+You may use, copy, modify, fork, and redistribute it for any **noncommercial**
+purpose. Personal use, research, education, evaluation, and use by nonprofit,
+educational, public-safety, and government organizations all qualify as
+noncommercial under that license.
+
+**Any commercial use requires a separate license.** If you want to ship, resell,
+or operate Antitheft as part of a commercial product or service, email
+<license@kinnector.dev> to arrange commercial terms. Running Antitheft for your own
+protection is noncommercial use and does not require a commercial license; a paid
+cloud subscription unlocks additional runtime capabilities but is not a code
+license (see section 8 of [`antitheft.md`](./antitheft.md)).
+
+Contributions are welcome under the [Contributor License Agreement](./CLA.md) —
+see [CONTRIBUTING.md](./CONTRIBUTING.md).

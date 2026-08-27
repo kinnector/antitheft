@@ -2,6 +2,9 @@
 name = "antitheft-agent"
 version = "0.1.0"
 edition = "2021"
+authors = ["Albert M. (Kinnector)"]
+license-file = "../LICENSE.md"
+publish = false
 
 [lib]
 name = "antitheft_agent"
