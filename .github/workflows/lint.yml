@@ -20,13 +20,13 @@ jobs:
       - name: PowerShell scripts
         shell: pwsh
         run: |
-          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-          $issues = Invoke-ScriptAnalyzer -Path install/antitheft.ps1, scripts/verify-release.ps1 -Severity Error
-          $issues | Format-Table -AutoSize
+          $issues = @()
           foreach ($f in 'install/antitheft.ps1', 'scripts/verify-release.ps1') {
+            $issues += @(Invoke-ScriptAnalyzer -Path $f -Severity Error)
             $null = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$null, [ref]$errors)
             if ($errors) { $errors; exit 1 }
           }
+          $issues | Format-Table -AutoSize
           if ($issues) { exit 1 }
       - name: Issue forms are valid YAML
         run: |
