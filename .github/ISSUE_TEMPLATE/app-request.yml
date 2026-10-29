@@ -1,0 +1,53 @@
+name: Protect an app
+description: Ask antitheft to guard the data of an app it doesn't cover yet.
+labels: [app request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Wallets, password managers, messengers, 2FA apps, cloud storage and any other app whose saved logins or keys
+        a thief would want. Check [what antitheft protects](https://github.com/kinnector/antitheft/blob/main/docs/what-it-protects.md) first.
+  - type: input
+    id: app
+    attributes:
+      label: App
+      placeholder: "Name, and its website"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Crypto wallet (desktop app)
+        - Crypto wallet (browser extension)
+        - Password manager
+        - Messenger
+        - 2FA / authenticator
+        - Browser
+        - Cloud storage
+        - Game launcher
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Where you use it
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: How you installed it
+      description: Its website, the Microsoft Store, the App Store, Homebrew, apt, Flatpak, Snap, an AppImage...
+  - type: textarea
+    id: where
+    attributes:
+      label: Where it keeps its data, if you know
+      description: Optional. A folder path is enough. Never paste the data itself.

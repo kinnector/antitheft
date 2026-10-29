@@ -1,0 +1,26 @@
+# The install scripts in this repository are the ones antitheft.pro serves: checked daily and on every change.
+name: Install scripts match antitheft.pro
+
+on:
+  push:
+    paths: [install/**]
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare with the live scripts
+        run: |
+          status=0
+          for f in antitheft.sh antitheft.ps1; do
+            curl -fsSL --retry 3 "https://antitheft.pro/$f" -o "/tmp/$f"
+            if diff -u "install/$f" "/tmp/$f"; then echo "$f: same as antitheft.pro/$f"; else status=1; fi
+          done
+          exit $status

@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell scripts
+        run: |
+          sh -n install/antitheft.sh
+          bash -n scripts/verify-release.sh
+          shellcheck --severity=error install/antitheft.sh scripts/verify-release.sh
+      - name: PowerShell scripts
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $issues = Invoke-ScriptAnalyzer -Path install/antitheft.ps1, scripts/verify-release.ps1 -Severity Error
+          $issues | Format-Table -AutoSize
+          foreach ($f in 'install/antitheft.ps1', 'scripts/verify-release.ps1') {
+            $null = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$null, [ref]$errors)
+            if ($errors) { $errors; exit 1 }
+          }
+          if ($issues) { exit 1 }
+      - name: Issue forms are valid YAML
+        run: |
+          for f in .github/ISSUE_TEMPLATE/*.yml .github/workflows/*.yml; do
+            yq e '.' "$f" >/dev/null || exit 1
+          done

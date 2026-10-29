@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Account, subscription or payment
+    url: https://antitheft.pro/account/
+    about: Use Support in your account or in the app, or write to support@antitheft.pro. Never post account details here.
+  - name: Security problem
+    url: https://github.com/kinnector/antitheft/security/advisories/new
+    about: Report it privately, never in a public issue (or write to security@antitheft.pro).
+  - name: Questions
+    url: https://github.com/kinnector/antitheft/blob/main/docs/faq.md
+    about: The FAQ answers the common ones.

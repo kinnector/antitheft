@@ -1,0 +1,57 @@
+name: False alert
+description: antitheft stopped or flagged a program you trust.
+labels: [false alert]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us what the alert named, so we can teach antitheft about it. Remove anything private first
+        (wallet addresses, account names). Never post a seed phrase, password, token or private key.
+  - type: input
+    id: program
+    attributes:
+      label: The program in the alert
+      description: The name the alert shows, and what that program is if you know.
+      placeholder: "msedge.exe, Microsoft Edge importing my Chrome passwords"
+    validations:
+      required: true
+  - type: input
+    id: started-by
+    attributes:
+      label: Started by
+      description: The app the alert says it came from, if it shows one.
+  - type: input
+    id: target
+    attributes:
+      label: What it reached for
+      placeholder: "Google Chrome - Saved passwords"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What you were doing at the time
+      description: Installing something, updating an app, importing bookmarks...
+  - type: input
+    id: version
+    attributes:
+      label: antitheft version
+      placeholder: "0.1.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot of the alert
+      description: Optional, drag it in here.

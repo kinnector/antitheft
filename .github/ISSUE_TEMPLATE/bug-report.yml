@@ -1,0 +1,55 @@
+name: Bug report
+description: Something in antitheft doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Never post a seed phrase, password, token or private key, even an old one.
+        antitheft stopped a program you trust? Use **False alert** instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: antitheft version
+      description: The Updates button in the app's title bar shows it.
+      placeholder: "0.1.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: System version
+      placeholder: "Windows 11 24H2, macOS 15.4, Ubuntu 24.04..."
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen again
+      placeholder: |
+        1. ...
+        2. ...
+  - type: textarea
+    id: logs
+    attributes:
+      label: Screenshots or log lines
+      description: |
+        Optional. The service log: Windows `C:\ProgramData\Kinnector\logs\antitheftd.log`, macOS
+        `/Library/Logs/Antitheft/antitheftd.log`, Linux `journalctl -u antitheftd`. Remove anything private first.
+      render: text
