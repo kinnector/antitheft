@@ -20,10 +20,10 @@ jobs:
       - name: PowerShell scripts
         shell: pwsh
         run: |
-          $issues = @()
+          $issues = @(); $tokens = $null; $errors = $null
           foreach ($f in 'install/antitheft.ps1', 'scripts/verify-release.ps1') {
             $issues += @(Invoke-ScriptAnalyzer -Path $f -Severity Error)
-            $null = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$null, [ref]$errors)
+            $null = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$tokens, [ref]$errors)
             if ($errors) { $errors; exit 1 }
           }
           $issues | Format-Table -AutoSize
