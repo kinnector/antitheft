@@ -82,3 +82,36 @@ cat manifest.json
 
 `Signature Verified Successfully` means the manifest is ours. It names each file's SHA-256: compare it with your
 download as above.
+
+## Check an installed copy
+
+The manifest covers the downloads. Every release from 0.1.8 on also signs the list of every file inside them, so an
+installed copy can be checked file by file at any time. The list is installed beside the programs as `files.token`
+(with a readable copy, `files.json`), and attached to the release as `antitheft-<version>-windows-x86_64-files.token`.
+It is signed the same way as `manifest.token`, over `antitheft-files-v1`, one zero byte, then the list.
+
+### With the script (Windows)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\verify-install.ps1
+```
+
+```
+signature OK: antitheft 0.1.8 (windows-x86_64), signed with the antitheft release key
+OK: all 20 installed files are exactly as released
+```
+
+It checks `C:\Program Files\Antitheft` against the `files.token` in it. To not trust the copy on the computer, download
+the list from the release page and pass it: `-Token antitheft-0.1.8-windows-x86_64-files.token`. Any file that differs
+is printed as `CHANGED`, `MISSING` or `ADDED`. The setup writes the install folder's path into two files of the
+Claude Code plugin; the script puts the shipped text back before it compares them. The script runs no antitheft
+program. The signature is checked with OpenSSL 3 (Git for Windows ships one).
+
+### With antitheft itself
+
+```powershell
+& "C:\Program Files\Antitheft\antitheftd.exe" verify-install
+```
+
+The same check, by the installed program. antitheft also runs it each time its service starts and shows an alert for
+any file that is not as released.
