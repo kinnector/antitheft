@@ -99,14 +99,15 @@
     Write-Host 'By installing antitheft you agree to its Terms: https://antitheft.pro/terms/'
     Write-Host 'It runs with full system rights and can stop programs. To remove it: https://antitheft.pro/uninstall/'
 
-    # 4. install. A zip (the service-wrapper build, no MSI) unpacks and runs its own install.ps1
-    #    elevated; an msi goes through msiexec; anything else is run as-is.
+    # 4. install. A zip (the service-wrapper build, no MSI) unpacks and installs itself elevated with
+    #    `antitheftd.exe install` (no PowerShell); an msi goes through msiexec;
+    #    anything else is run as-is.
     if ($file.EndsWith('.zip')) {
       $unpack = Join-Path $dir 'unpacked'
       try { Expand-Archive -Path $path -DestinationPath $unpack -Force } catch { Fail 'the download could not be unpacked.'; return }
-      $installer = Get-ChildItem -Path $unpack -Filter 'install.ps1' -Recurse | Select-Object -First 1
-      if (-not $installer) { Fail 'the download has no install.ps1.'; return }
-      $exe = 'powershell.exe'; $argv = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$($installer.FullName)`"")
+      $daemon = Get-ChildItem -Path $unpack -Filter 'antitheftd.exe' -Recurse | Select-Object -First 1
+      if (-not $daemon) { Fail 'the download has no antitheftd.exe.'; return }
+      $exe = $daemon.FullName; $argv = @('install', '--source', "`"$($daemon.DirectoryName)`"")
     }
     elseif ($file.EndsWith('.msi')) { $exe = 'msiexec.exe'; $argv = @('/i', "`"$path`"", '/passive', '/norestart') }
     else { $exe = $path; $argv = @() }
