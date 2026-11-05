@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>Every program that reaches for your wallets has to get past antitheft.</b><br>
-  Desktop protection for crypto wallets, saved passwords, browser logins and cookies, messengers and 2FA apps.<br>
+  Infostealer protection for crypto wallets, saved passwords, browser logins and cookies, messengers and 2FA apps.<br>
   Windows now. macOS and Linux are coming: <a href="https://antitheft.pro">join the waitlist</a>.
 </p>
 
