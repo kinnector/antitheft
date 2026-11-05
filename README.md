@@ -41,6 +41,10 @@ A program that touches a protected file is stopped, and you get an alert.
 No blocklist to keep up to date and no virus signatures to match: antitheft doesn't need to know the malware. It
 knows your apps.
 
+<p align="center">
+  <img src="docs/screenshots/home.png" width="860" alt="antitheft on Windows: protected, with an alert about a program from a cracked installer that tried to read Chrome's saved passwords and a MetaMask wallet, and was stopped">
+</p>
+
 ## What it protects
 
 | | |
@@ -56,6 +60,17 @@ knows your apps.
 
 Developer keys (SSH keys, AWS and other cloud credentials, `.env` files, git and registry tokens) are on the record: you
 see which program read each one, and when. The full list, per system: [docs/what-it-protects.md](docs/what-it-protects.md).
+
+## Screenshots
+
+| | |
+| --- | --- |
+| <img src="docs/screenshots/alert.png" width="400" alt="An alert: a helper started by a cracked installer tried to read Chrome's saved passwords and MetaMask, and was stopped"> | <img src="docs/screenshots/vaults.png" width="400" alt="Vaults: wallets and browsers antitheft found, each protected"> |
+| **The alert.** Which program it was, what started it and what it reached for. | **Your vaults.** Every wallet, password store and browser antitheft found on the computer. |
+| <img src="docs/screenshots/activity.png" width="400" alt="Activity: each vault read by its own app"> | <img src="docs/screenshots/agents.png" width="400" alt="Settings, Agents: Claude Code, Codex and Cursor connected"> |
+| **Activity.** Who opened each vault, and when. | **AI agents.** Claude Code, Codex and Cursor keep out of your vaults by themselves. |
+
+The screenshots use made-up data.
 
 ## Install
 
