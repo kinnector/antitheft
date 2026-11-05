@@ -57,6 +57,7 @@ knows your apps.
 | **2FA apps** | Authy, Ente Auth, Proton Authenticator and authenticator browser extensions |
 | **Cloud storage logins** | Dropbox, MEGA, Nextcloud, pCloud, Syncthing, rclone |
 | **Wallet apps' identity** | Every wallet app, hardware wallet companions included (Ledger Wallet, Trezor Suite, BitBoxApp...), is checked against its signed release. A replaced copy is marked **Hijacked** and kept away from the wallet |
+| **Supply chain** | antitheft doesn't judge a package, it stops what a bad one does: a malicious npm, pip or cargo package that reaches for your wallets or passwords is stopped, and a start-up entry it adds to stay on your computer is flagged. Every package install is on the record with what it touched |
 
 Developer keys (SSH keys, AWS and other cloud credentials, `.env` files, git and registry tokens) are on the record: you
 see which program read each one, and when. The full list, per system: [docs/what-it-protects.md](docs/what-it-protects.md).
