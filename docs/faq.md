@@ -8,8 +8,7 @@ that no antivirus has seen yet is still not your wallet app. Keep your antivirus
 
 ### What happens when something reaches for my wallet?
 
-On Windows and macOS the program is stopped. On Linux, with kernel protection on, it is refused before the file opens.
-Either way you get an alert: which program it was, which app started it, and what it reached for. From the alert you
+The program is stopped, and you get an alert: which program it was, which app started it, and what it reached for. From the alert you
 can look closer, end the program, or mark it as not a threat.
 
 ### Something I trust was stopped. What now?
@@ -21,7 +20,7 @@ so we can fix it.
 ### Does it work without a subscription?
 
 Yes, in **watching only** mode: it shows everything that reaches for your vaults, and stops nothing. A subscription is
-$10 per computer, a year, with 14 days money back.
+$100 a year, one price for all your computers (fair use), with 14 days money back.
 
 ### Does it slow down my computer?
 

@@ -6,8 +6,7 @@ app, where you see your vaults, alerts and activity. Both install together.
 By installing antitheft you agree to its [Terms](https://antitheft.pro/terms/).
 
 - [Windows](#windows)
-- [macOS](#macos)
-- [Linux](#linux)
+- [macOS and Linux](#macos-and-linux)
 - [After installing](#after-installing)
 - [Uninstall](#uninstall)
 
@@ -36,29 +35,9 @@ iwr https://antitheft.pro/antitheft.ps1 -useb | iex
 
 Running the installer again over an existing install updates it in place.
 
-## macOS
+## macOS and Linux
 
-Open Terminal and run:
-
-```sh
-curl -fsSL https://antitheft.pro/antitheft.sh | bash
-```
-
-It asks for your password to install the protection service. macOS ships with its file auditing turned off, and
-antitheft needs it to see which programs open your vaults, so the script asks whether to turn it on and then offers to
-restart. If you say no, the app asks again later. Then it opens the app.
-
-## Linux
-
-```sh
-curl -fsSL https://antitheft.pro/antitheft.sh | bash
-```
-
-It installs the protection service (systemd) and the app, and asks for your password through `sudo`.
-
-On Linux antitheft refuses a program before the file opens, using a security feature of the Linux kernel (BPF LSM).
-Many distributions ship with it turned off. If yours does, the app shows **Turn on**: it changes your boot settings
-once and asks you to restart.
+Not available yet. Join the waitlist on [antitheft.pro](https://antitheft.pro) and we will email you when they are.
 
 ## After installing
 
@@ -76,23 +55,7 @@ computer (alerts, activity, your decisions) stay unless you ask the uninstaller 
 PowerShell opened as administrator:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "C:\Program Files\Antitheft\uninstall.ps1" -Purge
+& "C:\Program Files\Antitheft\antitheftd.exe" uninstall --purge
 ```
-
-**macOS:** in the app, Settings > General > Uninstall antitheft. Or in Terminal:
-
-```sh
-curl -fsSL https://antitheft.pro/antitheft.sh | bash -s uninstall
-```
-
-Add `--purge` to also delete its records, and `--disable-auditing` to turn macOS auditing back off.
-
-**Linux:**
-
-```sh
-curl -fsSL https://antitheft.pro/antitheft.sh | bash -s uninstall
-```
-
-Add `--purge` to also delete its records.
 
 More: [antitheft.pro/uninstall](https://antitheft.pro/uninstall/).

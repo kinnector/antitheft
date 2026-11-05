@@ -7,12 +7,12 @@
 <p align="center">
   <b>Every program that reaches for your wallets has to get past antitheft.</b><br>
   Desktop protection for crypto wallets, saved passwords, browser logins and cookies, messengers and 2FA apps.<br>
-  Windows, macOS and Linux.
+  Windows now. macOS and Linux are coming: <a href="https://antitheft.pro">join the waitlist</a>.
 </p>
 
 <p align="center">
   <a href="https://github.com/kinnector/antitheft/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/kinnector/antitheft?label=release&color=3b82f6"></a>
-  <img alt="Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-555">
+  <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-555">
   <a href="https://github.com/kinnector/antitheft/actions/workflows/verify-release.yml"><img alt="Release verified" src="https://github.com/kinnector/antitheft/actions/workflows/verify-release.yml/badge.svg"></a>
   <a href="https://antitheft.pro"><img alt="antitheft.pro" src="https://img.shields.io/badge/web-antitheft.pro-111"></a>
 </p>
@@ -36,8 +36,7 @@ antitheft keeps those files for the one app that owns them. Your wallet opens fo
 open for Chrome. Anything else that reaches for them is stopped, and you see what it was, where it came from and what
 it tried to touch.
 
-- **On Windows and macOS**, a program that touches a protected file is stopped, and you get an alert.
-- **On Linux**, once kernel protection is on, any other program is refused before the file even opens.
+A program that touches a protected file is stopped, and you get an alert.
 
 No blocklist to keep up to date and no virus signatures to match: antitheft doesn't need to know the malware. It
 knows your apps.
@@ -69,14 +68,11 @@ see which program read each one, and when. The full list, per system: [docs/what
 iwr https://antitheft.pro/antitheft.ps1 -useb | iex
 ```
 
-**macOS and Linux:**
+**macOS and Linux:** not available yet. Join the waitlist on [antitheft.pro](https://antitheft.pro) and we will
+email you when they are.
 
-```sh
-curl -fsSL https://antitheft.pro/antitheft.sh | bash
-```
-
-The install scripts download the release from this page (from our own mirror at `dl.antitheft.pro` when GitHub can't
-be reached) and check its SHA-256 before installing anything. Read them before you run them: [install/](install/).
+The install script downloads the release from this page (from our own mirror at `dl.antitheft.pro` when GitHub can't
+be reached) and checks its SHA-256 before installing anything. Read it before you run it: [install/](install/).
 Step by step, and how to uninstall: [docs/install.md](docs/install.md).
 
 ## Updates
@@ -100,9 +96,9 @@ How it works and how to do it by hand: [docs/verify.md](docs/verify.md).
 
 ## Price
 
-**$10 per computer, a year.** Renews yearly, cancel any time, money back within 14 days. Without a subscription
+**$100 a year, one price for all your computers** (fair use). Renews yearly, cancel any time, money back within 14 days. Without a subscription
 antitheft runs in watching-only mode: it shows everything that reaches for your files, and stops nothing.
-For a business licence, write to [business@antitheft.pro](mailto:business@antitheft.pro).
+For a company, or more computers than fair use covers, write to [business@antitheft.pro](mailto:business@antitheft.pro).
 
 ## Questions
 
