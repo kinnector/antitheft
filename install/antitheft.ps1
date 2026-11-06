@@ -57,7 +57,10 @@
     }
     return
   } }
-  try { $latest = $resp.Content | ConvertFrom-Json } catch { Fail 'the release description is unreadable.'; return }
+  # GitHub serves release files as application/octet-stream, which Windows PowerShell 5.1 hands back as bytes, not text
+  $json = $resp.Content
+  if ($json -is [byte[]]) { $json = [Text.Encoding]::UTF8.GetString($json) }
+  try { $latest = $json | ConvertFrom-Json } catch { Fail 'the release description is unreadable.'; return }
   $version = [string]$latest.version
   if ($version -notmatch '^[A-Za-z0-9._+-]+$') { Fail 'the release description is unreadable (no valid version).'; return }
 
