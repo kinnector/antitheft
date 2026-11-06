@@ -75,20 +75,13 @@ The screenshots use made-up data.
 
 ## Install
 
-**Windows 10 and 11:** download `antitheft-<version>-windows-x86_64-setup.exe` from the
-[latest release](https://github.com/kinnector/antitheft/releases/latest) and run it.
-
-**Windows, from PowerShell:**
-
-```powershell
-iwr https://antitheft.pro/antitheft.ps1 -useb | iex
-```
+**Windows 10 and 11:** download the signed installer,
+[antitheft-windows-x86_64-setup.exe](https://github.com/kinnector/antitheft/releases/latest/download/antitheft-windows-x86_64-setup.exe)
+(always the latest release), and run it.
 
 **macOS and Linux:** not available yet. Join the waitlist on [antitheft.pro](https://antitheft.pro) and we will
 email you when they are.
 
-The install script downloads the release from this page (from our own mirror at `dl.antitheft.pro` when GitHub can't
-be reached) and checks its SHA-256 before installing anything. Read it before you run it: [install/](install/).
 Step by step, and how to uninstall: [docs/install.md](docs/install.md).
 
 ## Updates

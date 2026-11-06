@@ -51,7 +51,7 @@ main() {
   case "$os" in
     Linux) os=linux ;;
     Darwin) os=macos ;;
-    *) die "antitheft has no package for $os. On Windows, open PowerShell and run: iwr https://antitheft.pro/antitheft.ps1 -useb | iex" ;;
+    *) die "antitheft has no package for $os. On Windows, download the installer: https://github.com/kinnector/antitheft/releases/latest/download/antitheft-windows-x86_64-setup.exe" ;;
   esac
   arch=$(uname -m)
   case "$arch" in

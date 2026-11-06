@@ -21,7 +21,7 @@ jobs:
         shell: pwsh
         run: |
           $issues = @(); $tokens = $null; $errors = $null
-          foreach ($f in 'install/antitheft.ps1', 'scripts/verify-release.ps1', 'scripts/verify-install.ps1') {
+          foreach ($f in 'scripts/verify-release.ps1', 'scripts/verify-install.ps1') {
             $issues += @(Invoke-ScriptAnalyzer -Path $f -Severity Error)
             $null = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$tokens, [ref]$errors)
             if ($errors) { $errors; exit 1 }

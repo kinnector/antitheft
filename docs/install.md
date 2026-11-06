@@ -27,12 +27,6 @@ that it names the file you downloaded, then **Run anyway**. You can check the fi
 The app uses the Microsoft Edge WebView2 Runtime, which comes with Windows 11 and with Edge on Windows 10. The
 installer tells you if it is missing.
 
-**From PowerShell** (downloads, checks the SHA-256 and installs; Windows asks for permission):
-
-```powershell
-iwr https://antitheft.pro/antitheft.ps1 -useb | iex
-```
-
 Running the installer again over an existing install updates it in place.
 
 ## macOS and Linux
