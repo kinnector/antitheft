@@ -55,8 +55,15 @@ if ($openssl) {
 
 foreach ($f in $Files) {
   $name = Split-Path -Leaf $f
-  $entry = $manifest.files.PSObject.Properties.Value | Where-Object { ([string]$_.url).Split('/')[-1] -eq $name } | Select-Object -First 1
+  $entryName = $name
+  # The installer is also attached with no version in its name (antitheft-windows-x86_64-setup.exe, the
+  # website's download button). It is the same file as the versioned one, so it is checked against that entry.
+  if ($name -like 'antitheft-*-setup.*' -and $name -notlike "antitheft-$($manifest.version)-*") {
+    $entryName = "antitheft-$($manifest.version)-" + $name.Substring('antitheft-'.Length)
+  }
+  $entry = $manifest.files.PSObject.Properties.Value | Where-Object { ([string]$_.url).Split('/')[-1] -eq $entryName } | Select-Object -First 1
   if (-not $entry) { Write-Host "NOT IN RELEASE: $name" -ForegroundColor Red; $status = 1; continue }
+  if ($entryName -ne $name) { $name = "$name (same file as $entryName)" }
   $got = (Get-FileHash -Algorithm SHA256 -Path $f).Hash.ToLowerInvariant()
   if ($got -eq ([string]$entry.sha256).ToLowerInvariant()) { Write-Host "OK: $name ($got)" }
   else { Write-Host "MISMATCH: $name is $got, the release says $($entry.sha256)" -ForegroundColor Red; $status = 1 }

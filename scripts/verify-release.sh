@@ -36,8 +36,13 @@ status=0
 for f in "$@"; do
     name=${f##*/}
     # the manifest's entry for this file: {"mirrors":[...],"sha256":"...","size":N,"url":".../<name>"}
-    want=$(grep -o "{[^{}]*/${name//./\\.}\"[^{}]*}" "$work/payload.json" | sed -n 's/.*"sha256":"\([0-9a-fA-F]\{64\}\)".*/\1/p' | head -1)
+    entry=$name
+    # The installer is also attached with no version in its name (antitheft-windows-x86_64-setup.exe, the
+    # website's download button). It is the same file as the versioned one, so it is checked against that entry.
+    if [[ $name == antitheft-*-setup.* && $name != antitheft-"$version"-* ]]; then entry="antitheft-$version-${name#antitheft-}"; fi
+    want=$(grep -o "{[^{}]*/${entry//./\\.}\"[^{}]*}" "$work/payload.json" | sed -n 's/.*"sha256":"\([0-9a-fA-F]\{64\}\)".*/\1/p' | head -1 || true)
     if [[ -z $want ]]; then echo "NOT IN RELEASE: $name"; status=1; continue; fi
+    [[ $entry == "$name" ]] || name="$name (same file as $entry)"
     got=$( (command -v sha256sum >/dev/null && sha256sum "$f" || shasum -a 256 "$f") | cut -d' ' -f1)
     if [[ ${got,,} == "${want,,}" ]]; then echo "OK: $name ($got)"; else echo "MISMATCH: $name is $got, the release says $want"; status=1; fi
 done
